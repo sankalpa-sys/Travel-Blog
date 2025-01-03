@@ -12,12 +12,15 @@ import {calculateReadingTime, formatDate} from "@/lib/utils";
 import Spinner from "@/components/shared/Spinner";
 import { Separator } from "@/components/ui/separator"
 import Blogs from "@/components/shared/Blogs";
+import {useStorageUrl} from "@/lib/getImageUrl";
 
  function SingleBlogPage() {
     const params =  useParams()
     const blog: TBlog = useQuery(api.blogs.getBlogById, {
         blog_id: params.id as Id<"blogs">,
     });
+
+    const imageUrl = useStorageUrl(blog?.banner);
 
      const relatedBlogs: TBlogs = useQuery(api.blogs.relatedBlogs, { category: blog?.category}) ?? [];
      const filteredBlogs = relatedBlogs.filter((b) => b._id !== blog?._id);
@@ -33,11 +36,11 @@ import Blogs from "@/components/shared/Blogs";
         <section className='pt-20 max-w-7xl mx-auto px-5 z-50'>
                <Image
                    className='object-center object-cover h-60 rounded-2xl'
-                   src={blog?.banner}
+                   src={imageUrl || 'https://images.pexels.com/photos/1662298/pexels-photo-1662298.jpeg?auto=compress&cs=tinysrgb&w=800'}
                      width={1600}
                         height={800}
                    objectFit={'cover'}
-                   alt='blog'
+                   alt={blog?.title}
                    quality={100}
                />
             <div className='flex flex-col gap-5 md:flex-row items-start justify-between py-10'>

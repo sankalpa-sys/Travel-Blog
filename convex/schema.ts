@@ -13,7 +13,7 @@ export default defineSchema({
         title: v.string(),
         description: v.string(),
         highlight: v.string(),
-        banner: v.string(),
+        banner: v.optional(v.id("_storage")),
         readTime: v.string(),
         category: v.union(
             v.literal("All"),

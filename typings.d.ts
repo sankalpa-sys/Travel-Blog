@@ -1,3 +1,5 @@
+import {Id} from "@/convex/_generated/dataModel";
+
 type TBlog = {
     title: string;
     highlight: string;
@@ -5,7 +7,7 @@ type TBlog = {
     category: TBlogCategory;
     userId: string;
     readTime: string;
-    banner: string;
+    banner: Id<"_storage"> | undefined;
     _id: string;
     _creationTime: number;
 };

@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
           {
               hostname: "www.vivaanadventure.com",
               protocol: "https"
+          }, {
+              hostname: "spotted-vole-227.convex.cloud",
+              protocol: "https"
           }
       ]
   }

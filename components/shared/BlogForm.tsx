@@ -1,5 +1,5 @@
 'use client'
-import React, {useRef} from 'react';
+import React, {ChangeEvent, useRef, useState, useTransition} from 'react';
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -19,8 +19,7 @@ import {api} from "@/convex/_generated/api";
 import {TBlogCategory} from "@/typings";
 import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
-
-const IMAGE = "https://images.pexels.com/photos/1662298/pexels-photo-1662298.jpeg?auto=compress&cs=tinysrgb&w=800"
+import {Id} from "@/convex/_generated/dataModel";
 
 const formSchema = z.object({
     title: z.string().min(10, {
@@ -39,6 +38,8 @@ const formSchema = z.object({
 
 function BlogForm() {
     const createBlog = useMutation(api.blogs.createBlog);
+    const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
+    const updateBlogImage = useMutation(api.storage.updateBlogImage);
     const {user} = useUser()
     const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -50,22 +51,64 @@ function BlogForm() {
 
         },
     });
-    const handleImageChange = () => {
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
 
+    async function handleImageUpload(file: File): Promise<string | null> {
+        try {
+            const postUrl = await generateUploadUrl();
+            const result = await fetch(postUrl, {
+                method: "POST",
+                headers: { "Content-Type": file.type },
+                body: file,
+            });
+            const { storageId } = await result.json();
+            return storageId;
+        } catch (error) {
+            console.error("Failed to upload image:", error);
+            return null;
+        }
+    }
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-      const blogId =  await createBlog({
-            title: values.title,
-            description: values.description,
-            highlight: values.highlight,
-            category: values.category as TBlogCategory,
-            banner: IMAGE,
-            readTime: "0",
-            userId: user?.id as string
-        })
+        if (!user?.id) return;
+        startTransition(async()=> {
+            let imageStorageId = null;
+            if (selectedImage) {
+                imageStorageId = await handleImageUpload(selectedImage);
+            }
 
-        router.push(`/blog/${blogId}`)
+            const blogId =  await createBlog({
+                title: values.title,
+                description: values.description,
+                highlight: values.highlight,
+                category: values.category as TBlogCategory,
+                readTime: "0",
+                userId: user?.id as string
+            })
+
+            if (imageStorageId) {
+                await updateBlogImage({
+                    blogId,
+                    storageId: imageStorageId as Id<"_storage">,
+                });
+            }
+
+            router.push(`/blog/${blogId}`)
+
+        })
     }
 
     const imageInput = useRef<HTMLInputElement>(null)
@@ -151,7 +194,7 @@ function BlogForm() {
                     file:bg-blue-50 file:text-blue-700
                     hover:file:bg-blue-100"
                 />
-                <Button className='w-full h-12 text-lg font-bold bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 text-white active:scale-95 transition-transform duration-300 ease-in-out' type="submit">Submit</Button>
+                <Button disabled={isPending} className='w-full disabled:opacity-90 disabed:cursor-not-allowed h-12 text-lg font-bold bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 text-white active:scale-95 transition-transform duration-300 ease-in-out' type="submit">{isPending ? "Creating blog...": "Create Blog"}</Button>
             </form>
         </Form>
     );

@@ -65,10 +65,18 @@ export const createBlog = mutation({
         ),
         userId: v.string(),
         readTime: v.string(),
-        banner: v.string(),
+        banner: v.optional(v.id("_storage")),
     },
     handler: async (ctx, args) => {
-        const blogId = await ctx.db.insert("blogs", { ...args});
+        const blogId = await ctx.db.insert("blogs", {
+            title: args.title,
+            highlight: args.highlight,
+            description: args.description,
+            category: args.category,
+            userId: args.userId,
+            readTime: args.readTime,
+            banner: args.banner,
+        });
         return blogId;
     },
 });

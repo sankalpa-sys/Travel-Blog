@@ -5,13 +5,15 @@ import {calculateReadingTime, formatDate, truncateText} from "@/lib/utils";
 import {TBlog} from "@/typings";
 import Badge from "@/components/shared/Badge";
 import Link from "next/link";
+import {useStorageUrl} from "@/lib/getImageUrl";
 
 function BlogCard({blog}: {blog: TBlog}) {
+    const imageUrl = useStorageUrl(blog?.banner);
     return (
         <Link href={`/blog/${blog._id}`}>
             <article className='relative rounded-2xl cursor-pointer hover:scale-95 transition-transform duration-300 ease-in-out'>
                 <div className='relative'>
-                    <Image className='rounded-2xl max-h-60 object-cover' src={blog?.banner}
+                    <Image className='rounded-2xl max-h-60 object-cover' src={imageUrl}
                            alt='blog'
                            width={100}
                            height={100}
