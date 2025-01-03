@@ -20,6 +20,7 @@ import {TBlogCategory} from "@/typings";
 import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {Id} from "@/convex/_generated/dataModel";
+import {zodResolver} from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
     title: z.string().min(10, {
@@ -31,8 +32,8 @@ const formSchema = z.object({
     description: z.string().min(330, {
         message: "Highlight must be at least 330 characters.",
     }),
-    category: z.string().email({
-        message: "Select a category",
+    category: z.string({
+        message: "Please select a category",
     }),
 })
 
@@ -43,6 +44,7 @@ function BlogForm() {
     const {user} = useUser()
     const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
             description: "",

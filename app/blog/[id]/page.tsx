@@ -21,10 +21,12 @@ import {useStorageUrl} from "@/lib/getImageUrl";
     });
 
     const imageUrl = useStorageUrl(blog?.banner);
+     const user = useQuery(api.users.getUserById, {
+         userId: blog?.userId ,
+     });
 
      const relatedBlogs: TBlogs = useQuery(api.blogs.relatedBlogs, { category: blog?.category}) ?? [];
      const filteredBlogs = relatedBlogs.filter((b) => b._id !== blog?._id);
-    console.log("blog", blog)
      if(blog === undefined){
         return (
             <div className="min-h-[400px] flex items-center justify-center">
@@ -36,7 +38,8 @@ import {useStorageUrl} from "@/lib/getImageUrl";
         <section className='pt-20 max-w-7xl mx-auto px-5 z-50'>
                <Image
                    className='object-center object-cover h-60 rounded-2xl'
-                   src={imageUrl || 'https://images.pexels.com/photos/1662298/pexels-photo-1662298.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                   loading='lazy'
+                   src={imageUrl}
                      width={1600}
                         height={800}
                    objectFit={'cover'}
@@ -58,12 +61,12 @@ import {useStorageUrl} from "@/lib/getImageUrl";
                 <div className='flex items-center gap-2 py-4'>
                     <Image
                         className='rounded-full h-6 w-6 object-cover'
-                        src='https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb'
+                        src={user?.imageUrl}
                         alt='author'
                         height={100}
                         width={100}
                     />
-                    <p className='text-sm '>Sankalpa Neupane</p>
+                    <p className='text-sm '>{user?.name}</p>
                 </div>
             </div>
             <h3 className='text-xl font-bold py-5'>Blog Description</h3>

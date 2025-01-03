@@ -1,4 +1,4 @@
-import {mutation} from "./_generated/server";
+import {mutation, query} from "./_generated/server";
 import {v} from "convex/values";
 
 export const updateUser = mutation({
@@ -6,8 +6,9 @@ export const updateUser = mutation({
         userId: v.string(),
         name: v.string(),
         email: v.string(),
+        imageUrl: v.optional(v.string()),
     },
-    handler: async (ctx, { userId, name, email }) => {
+    handler: async (ctx, { userId, name, email, imageUrl }) => {
         // Check if user exists
         const existingUser = await ctx.db
             .query("users")
@@ -28,8 +29,21 @@ export const updateUser = mutation({
             userId,
             name,
             email,
+            imageUrl
         });
 
         return newUserId;
+    },
+});
+
+export const getUserById = query({
+    args: {
+        userId: v.string(),
+    },
+    handler: async (ctx, { userId }) => {
+        return await ctx.db
+            .query("users")
+            .withIndex("by_user_id", (q) => q.eq("userId", userId))
+            .first();
     },
 });

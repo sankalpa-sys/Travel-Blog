@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import Image from "next/image";
 import {Dot} from "lucide-react";
@@ -6,9 +7,14 @@ import {TBlog} from "@/typings";
 import Badge from "@/components/shared/Badge";
 import Link from "next/link";
 import {useStorageUrl} from "@/lib/getImageUrl";
+import {useQuery} from "convex/react";
+import {api} from "@/convex/_generated/api";
 
 function BlogCard({blog}: {blog: TBlog}) {
     const imageUrl = useStorageUrl(blog?.banner);
+    const user = useQuery(api.users.getUserById, {
+        userId: blog?.userId ,
+    });
     return (
         <Link href={`/blog/${blog._id}`}>
             <article className='relative rounded-2xl cursor-pointer hover:scale-95 transition-transform duration-300 ease-in-out'>
@@ -33,12 +39,12 @@ function BlogCard({blog}: {blog: TBlog}) {
                 <div className='flex items-center gap-2 py-2'>
                     <Image
                         className='rounded-full h-6 w-6 object-cover'
-                        src='https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb'
+                        src={user?.imageUrl}
                         alt='author'
                         height={100}
                         width={100}
                     />
-                    <p className='text-sm font-semibold'>Sankalpa Neupane</p>
+                    <p className='text-sm font-semibold'>{user?.name}</p>
                 </div>
                 <div className='absolute top-3 left-3'>
                     <Badge label={blog?.category}/>

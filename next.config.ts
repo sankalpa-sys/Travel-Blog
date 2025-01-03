@@ -21,7 +21,10 @@ const nextConfig: NextConfig = {
           }, {
               hostname: "spotted-vole-227.convex.cloud",
               protocol: "https"
-          }
+          },{
+              hostname: "img.clerk.com",
+              protocol: "https"
+          },
       ]
   }
 };
