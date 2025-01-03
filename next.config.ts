@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
           {
               hostname: "image.tmdb.org",
               protocol: "https"
+          },
+          {
+              hostname: "i0.wp.com",
+              protocol: "https"
+          },
+          {
+              hostname: "www.vivaanadventure.com",
+              protocol: "https"
           }
       ]
   }

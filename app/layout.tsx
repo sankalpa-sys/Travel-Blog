@@ -5,6 +5,7 @@ import Header from "@/components/shared/Header";
 import {ThemeProvider} from "next-themes";
 import Cards from "@/components/shared/Cards";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import SyncUserWithConvex from "@/components/SyncUserWithConvex";
 
 export const metadata: Metadata = {
   title: "Quest: Your Blogging Platform",
@@ -19,7 +20,7 @@ export default function RootLayout({
   return (
       <ClerkProvider>
     <html lang="en">
-      <body className='dark:bg-[#1A1C29] bg-white'
+      <body
       >
       <ConvexClientProvider>
       <ThemeProvider
@@ -29,6 +30,7 @@ export default function RootLayout({
           disableTransitionOnChange
       >
         <Header/>
+        <SyncUserWithConvex/>
         {children}
         <Cards/>
       </ThemeProvider>

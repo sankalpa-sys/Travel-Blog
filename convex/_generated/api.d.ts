@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as blogs from "../blogs.js";
+import type * as storage from "../storage.js";
 import type * as users from "../users.js";
 
 /**
@@ -26,6 +27,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   blogs: typeof blogs;
+  storage: typeof storage;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

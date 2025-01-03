@@ -27,7 +27,7 @@ function Header() {
 
             <section className='flex-1'>
                 <Form className='flex border rounded-full px-4 py-2 w-1/2 mr-auto ml-10 bg-transparent backdrop-blur-sm' action="/search">
-                    <input className='outline-none h-full text-sm text-white bg-transparent rounded-lg flex-1 placeholder:text-gray-200' type="text" placeholder='Search destination...'/>
+                    <input className='outline-none h-full text-sm text-white bg-transparent  flex-1 placeholder:text-gray-200' type="text" placeholder='Search destination...'/>
                     <Search className='h-4 w-4 text-white'/>
                 </Form>
             </section>

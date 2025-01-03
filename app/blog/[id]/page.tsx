@@ -31,19 +31,20 @@ import Blogs from "@/components/shared/Blogs";
      }
     return (
         <section className='pt-20 max-w-7xl mx-auto px-5 z-50'>
-            <Image
-                className='w-full object-cover h-60 rounded-2xl'
-                src={blog?.banner}
-                height={100}
-                width={100}
-                alt='blog'
-                quality={100}
-            />
+               <Image
+                   className='object-center object-cover h-60 rounded-2xl'
+                   src={blog?.banner}
+                     width={1600}
+                        height={800}
+                   objectFit={'cover'}
+                   alt='blog'
+                   quality={100}
+               />
             <div className='flex flex-col gap-5 md:flex-row items-start justify-between py-10'>
                 <h1 className='text-3xl font-semibold md:w-1/2 text-balance text-yellow-600'>{blog?.title}</h1>
                 <p className='md:w-[50%] text-gray-500 dark:text-gray-100'>{blog?.highlight}</p>
             </div>
-            <div className='flex flex-col md:flex-row md:items-center justify-between'>
+            <div className='flex flex-col md:flex-row md:items-center gap-5'>
                 <div className='flex items-center text-sm'>
                     <Badge label={blog?.category}/>
                     <Dot/>
@@ -59,7 +60,7 @@ import Blogs from "@/components/shared/Blogs";
                         height={100}
                         width={100}
                     />
-                    <p className='text-sm font-semibold'>Sankalpa Neupane</p>
+                    <p className='text-sm '>Sankalpa Neupane</p>
                 </div>
             </div>
             <h3 className='text-xl font-bold py-5'>Blog Description</h3>
